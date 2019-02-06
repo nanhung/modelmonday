@@ -26,11 +26,16 @@ xvals <- seq(0, par("usr")[2], length.out = 55)
 lines(xvals, predict(fm1, newdata = list(Time = xvals)),
       col = 4)
 
-
-
 library(lattice)
 library(latticeExtra)
 library(tidyverse)
+
+
+ggplot(Theoph, aes(x=Time, y=conc, color=Subject)) + 
+  geom_point() + geom_line() + 
+  theme(legend.position="none") + 
+  ggtitle("Theophylline concentrations over time")
+
 
 Theoph.MW <- 180.164 #g/mol
 Theoph$conc.mol<-Theoph$conc * 1000 / Theoph.MW
