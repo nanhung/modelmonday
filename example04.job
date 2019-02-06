@@ -1,0 +1,42 @@
+#
+# example 04: R matrix multiply example
+#
+#	Note:
+#	  - Total memory needed for calculation is about 3150 MB.
+#	  - Modify number of cores and OMP_NUM_THREADS to observe performance difference
+#
+#BSUB -J ex04_R_example   # sets the job name to ex04_R_example
+#BSUB -L /bin/bash        # uses the bash login shell to initialize the job's execution environment.
+#BSUB -W 0:15             # sets to 5 min the job's runtime wall-clock limit.
+#BSUB -n 2                # assigns 2 core for execution.
+#BSUB -R "span[ptile=2]"  # assigns 2 cores per node.
+#BSUB -R "rusage[mem=2500]" # reserves 2500MB per process/CPU for the job
+#BSUB -M 2500               # sets to 2500MB the per process enforceable memory limit.
+##
+#BSUB -o output.ex04.R_example.%J       # directs the job's standard output to output.ex04.R_example.jobid
+#BSUB -u d99622005@gmail.com          ## send all emails to email_address
+##
+# <--- at this point the current working directory is the one you submitted the job from.
+#
+
+echo "# List loaded modules"
+module list
+
+# load R module
+echo "# Load R module"
+module load R_tamu/3.4.2-iomkl-2017A-Python-2.7.12-default-mt
+echo "# List loaded modules"
+module list
+# find python's path
+echo "# Find Rscript's path"
+which Rscript
+# show R version number
+echo "# Show Rscript's version"
+Rscript --version
+
+# set number of threads
+# This number should match number of processor cores requested
+export OMP_NUM_THREADS=2
+
+echo "# run R example: matrix multiply ..."
+Rscript example04.matrix_multiply.r

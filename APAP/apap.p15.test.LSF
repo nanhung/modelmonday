@@ -1,0 +1,11 @@
+#BSUB -J mcsim_1			## sets the job name
+#BSUB -L /bin/bash			## uses the bash login shell to initialize the job's execution environment.
+#BSUB -W 30:00				## sets to 30 hours the job's runtime wall-clock limit.
+#BSUB -n 8					## assigns 8 cores for execution.
+#BSUB -R "span[ptile=8]"    ## request 8 core per node.
+#BSUB -R "rusage[mem=500]"	## reserves 500MB per process/CPU for the job 
+#BSUB -M 500				## sets to 500MB as the per process enforceable memory limit.
+#BSUB -o stdout_1.%J		## directs the job's standard output (%J is jobid)
+
+./mcsim.APAP apap.p15.c1.1.in & ./mcsim.APAP apap.p15.c1.2.in & ./mcsim.APAP apap.p15.c2.1.in & ./mcsim.APAP apap.p15.c2.2.in & ./mcsim.APAP apap.p15.c3.1.in & ./mcsim.APAP apap.p15.c3.2.in 
+wait

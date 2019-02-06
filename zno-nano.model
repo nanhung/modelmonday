@@ -1,0 +1,326 @@
+#------------------------------------------------------------------------------
+# ZnO-nano.model
+#------------------------------------------------------------------------------
+
+States = {A_lu,        # Amount  (mg)
+          A_gi,        #   ...   in  (mg)
+          A_sp,        #   ...   in  (mg)
+          A_li,        #   ...   in  (mg)
+          A_he,
+          A_br,
+          A_ki,
+          A_ven,
+          A_art,
+          A_urn,
+          A_fec,
+          A_ca};
+
+Outputs = {lnC_ven,
+           lnC_gi,
+           lnC_lu,
+           lnC_li,
+           lnC_ki,
+           lnC_sp,
+           lnC_br,
+           lnC_he,
+           lnC_ca,
+           A_total};    # Total quantity for mass balance
+
+
+Inputs = {IV_dose};     # Intravenous quantity  (mg)
+
+
+# Nominal parameter values
+# ========================
+# Units:
+# Volumes: liter
+# Time:    minute
+# Vmax:    mg / minute
+# Km:      mg
+# Flows:   liter / minute
+
+# Exposure modeling
+# -----------------
+IV_dose; # intravenous input (mg)
+Period; # period of the exposure/no exposure cycle (h)
+TChng = 0.01;
+
+# Physiological and pharmacokinetic parameters
+# --------------------------------------------
+BW = 0.031; # kg
+QCC = 9.025; # L/hr
+
+# Percent mass of tissues with ranges shown
+Pct_M_art = .0243; 
+Pct_M_ven = .0557; 
+Pct_M_lu = .007; 
+Pct_M_gi = .127; 
+Pct_M_sp = .004; 
+Pct_M_li = .059; 
+Pct_M_he = .007; 
+Pct_M_br = .014; 
+Pct_M_ki = .016; 
+Pct_M_ca = .706;  
+
+# Percent blood flows to tissues
+Pct_Q_gi = .188; 
+Pct_Q_sp = .011; 
+Pct_Q_li = .161; 
+Pct_Q_he = .060; 
+Pct_Q_br = .030; 
+Pct_Q_ki = .091; 
+Pct_Q_ca = .459; 
+
+# Tissue/blood partition coeficients
+P_li = 2.1; lnP_li = log(2.1);
+P_ki = 2.1; lnP_ki = log(2.1);
+P_sp = 1.3; lnP_sp = log(1.3);
+P_lu = 0.9; lnP_lu = log(0.9);
+P_he = 0.2; lnP_he = log(0.2);
+P_gi = 1.7; lnP_gi = log(1.7);
+P_br = 0.2; lnP_br = log(0.2);
+P_ca = 0.2; lnP_ca = log(0.2);
+
+# Elimination and transition rate
+k_gi = 0.07; lnk_gi = log(0.07);
+k_li = 0.04; lnk_li = log(0.04);
+k_ki = 0.02; lnk_ki = log(0.02);
+
+# Scaled parameters
+# -----------------
+# The following parameters are calculated from the above values in the Scale 
+# section before the start of each simulation.
+# They are left uninitialized here.
+
+VTC;
+V_lu;
+V_li;
+V_ki;
+V_sp;
+V_he;
+V_gi;
+V_br;
+V_ca;
+V_art;
+V_ven;
+
+QTC;
+QC;
+Q_lu;
+Q_sp;
+Q_li;
+Q_gi;
+Q_he;
+Q_br;
+Q_ki;
+Q_ca;
+
+#   Population Mean Parameters (M_...)
+#---------------------------------------
+
+M_QCC;
+
+M_Pct_M_art;
+M_Pct_M_ven; 
+M_Pct_M_lu; 
+M_Pct_M_gi; 
+M_Pct_M_sp; 
+M_Pct_M_li; 
+M_Pct_M_he; 
+M_Pct_M_br; 
+M_Pct_M_ki; 
+
+M_Pct_Q_gi; 
+M_Pct_Q_sp; 
+M_Pct_Q_li; 
+M_Pct_Q_he; 
+M_Pct_Q_br; 
+M_Pct_Q_ki; 
+
+M_lnP_li;
+M_lnP_ki;
+M_lnP_sp;
+M_lnP_lu;
+M_lnP_he;
+M_lnP_gi;
+M_lnP_br;
+M_lnP_ca;
+
+M_lnk_gi;
+M_lnk_li;
+M_lnk_ki;
+
+#   Population Variance (V_...)
+#---------------------------------------
+
+V_QCC;
+
+V_Pct_M_art;
+V_Pct_M_ven; 
+V_Pct_M_lu; 
+V_Pct_M_gi; 
+V_Pct_M_sp; 
+V_Pct_M_li; 
+V_Pct_M_he; 
+V_Pct_M_br; 
+V_Pct_M_ki; 
+
+V_Pct_Q_gi; 
+V_Pct_Q_sp; 
+V_Pct_Q_li; 
+V_Pct_Q_he; 
+V_Pct_Q_br; 
+V_Pct_Q_ki; 
+
+V_lnP_li;
+V_lnP_ki;
+V_lnP_sp;
+V_lnP_lu;
+V_lnP_he;
+V_lnP_gi;
+V_lnP_br;
+V_lnP_ca;
+
+V_lnk_gi;
+V_lnk_li;
+V_lnk_ki;
+
+# Data Error (Ve_...)
+#---------------------
+
+Ve_lnC_ven; 
+Ve_lnC_li; 
+Ve_lnC_gi; 
+Ve_lnC_lu;
+Ve_lnC_ki;
+Ve_lnC_sp;
+Ve_lnC_br;
+Ve_lnC_he;
+Ve_lnC_ca;
+
+Initialize {
+
+# Partition Coefficients
+P_li = exp(lnP_li);
+P_ki = exp(lnP_ki);
+P_sp = exp(lnP_sp);
+P_lu = exp(lnP_lu);
+P_he = exp(lnP_he);
+P_gi = exp(lnP_gi);
+P_br = exp(lnP_br);
+P_ca = exp(lnP_ca);
+
+# Elimination and transition rate
+k_gi = exp(lnk_gi);
+k_li = exp(lnk_li);
+k_ki = exp(lnk_ki);
+
+# Specify the compartment volumes (L)
+
+#VTC  = Pct_M_ki+Pct_M_gi+Pct_M_li+Pct_M_art+Pct_M_ven+
+#        Pct_M_br+Pct_M_he+Pct_M_sp+Pct_M_lu+Pct_M_ca;
+        
+V_ki = Pct_M_ki * BW; 
+V_gi = Pct_M_gi * BW; 
+V_li = Pct_M_li * BW; 
+V_art = Pct_M_art * BW; 
+V_ven = Pct_M_ven * BW; 
+V_br = Pct_M_br * BW; 
+V_he = Pct_M_he * BW; 
+V_sp = Pct_M_sp * BW; 
+V_lu = Pct_M_lu * BW; 
+V_ca = Pct_M_lu * BW;
+V_ca = (1 - (Pct_M_ki + Pct_M_gi + Pct_M_li + Pct_M_art + Pct_M_ven + 
+        Pct_M_br + Pct_M_he + Pct_M_sp + Pct_M_lu)) * BW;
+
+# Cardiac Output (L/hr) 
+QTC  = Pct_Q_sp + Pct_Q_li + Pct_Q_ki + Pct_Q_br + Pct_Q_gi + 
+            Pct_Q_he + Pct_Q_ca;
+QC  = QCC * pow(BW,0.75);     
+Q_lu = QC; # Lung
+Q_sp = QC * Pct_Q_sp / QTC; # Spleen
+Q_ki = QC * Pct_Q_ki / QTC; # Kidney
+Q_gi = QC * Pct_Q_gi / QTC; # GI
+Q_li = QC * Pct_Q_li / QTC; # Liver
+Q_br = QC * Pct_Q_br / QTC; # Brain
+Q_he = QC * Pct_Q_he / QTC; # Heart
+Q_ca = QC * Pct_Q_ca / QTC; # Carcass
+
+} # End of model initialization
+
+
+#---------------------------------------------------------
+# Dynamics
+# Define the dynamics of the simulation. This section is
+# calculated with each integration step. It includes
+# specification of differential equations.
+#---------------------------------------------------------
+
+Dynamics {
+
+  # Concentration (mg/L)
+  C_ven = A_ven/V_ven;
+  C_art = A_art/V_art;
+  C_lu = A_lu/V_lu;
+  C_li = A_li/V_li;
+  C_sp = A_sp/V_sp;
+  C_gi = A_gi/V_gi;
+  C_he = A_he/V_he;
+  C_br = A_br/V_br;  
+  C_ki = A_ki/V_ki;
+  C_ca = A_ca/V_ca;
+
+  # Venous blood concentrations at the organ exit
+  CV_lu = C_lu / P_lu;
+  CV_gi = C_gi / P_gi;
+  CV_sp = C_sp / P_sp;
+  CV_li = C_li / P_li;
+  CV_he = C_he / P_he;
+  CV_br = C_br / P_br;
+  CV_ki = C_ki / P_ki;
+  CV_ca = C_ca / P_ca; 
+  
+  # Dynamics
+  
+  IV_dose_rate = IV_dose / TChng;
+  
+  dt (A_ven) = IV_dose_rate + (Q_sp*CV_sp + (Q_li+Q_gi)*CV_li +
+        Q_he*CV_he + Q_br*CV_br + Q_ki*CV_ki + Q_ca*CV_ca) - C_ven * QC;
+ 
+  dt (A_art) = QC * (CV_lu - C_art); 
+  dt (A_lu) = QC * (C_ven - CV_lu); 
+ 
+  dt (A_gi) = Q_gi * (C_art - CV_gi) - C_gi * (k_gi / P_gi); 
+  dt (A_sp) = Q_sp * (C_art - CV_sp);
+  dt (A_li) = Q_li * (C_art - CV_li) + Q_gi * (CV_gi- CV_li);
+  dt (A_he) = Q_he * (C_art - CV_he);
+  dt (A_br) = Q_br * (C_art - CV_br);
+  dt (A_ki) = Q_ki * (C_art - CV_ki) - C_ki * (k_ki / P_ki);  
+  dt (A_ca) = Q_ca * (C_art - CV_ca);
+  
+  dt (A_urn) = C_ki * (k_ki / P_ki);
+  dt (A_fec) = C_gi * (k_gi / P_gi);
+  
+} # End of Dynamics
+
+
+#---------------------------------------------------------
+# CalcOutputs 
+# The following outputs are only calculated just before values
+# are saved.  They are not calculated with each integration step.
+#---------------------------------------------------------
+
+CalcOutputs {
+  lnC_ven = (A_ven < 0 ? 10E-30 : log(A_ven / V_ven));
+  lnC_lu = (A_lu < 0 ? 10E-30 : log(A_lu / V_lu)); 
+  lnC_gi = (A_gi < 0 ? 10E-30 : log(A_gi / V_gi)); 
+  lnC_sp = (A_sp < 0 ? 10E-30 : log(A_sp / V_sp)); 
+  lnC_li = (A_li < 0 ? 10E-30 : log(A_li / V_li)); 
+  lnC_ki = (A_ki < 0 ? 10E-30 : log(A_ki / V_ki)); 
+  lnC_br = (A_br < 0 ? 10E-30 : log(A_br / V_br)); 
+  lnC_he = (A_he < 0 ? 10E-30 : log(A_he / V_he)); 
+  lnC_ca = (A_ca < 0 ? 10E-30 : log(A_ca / V_ca));
+  A_total = A_art + A_ven + A_gi + A_sp + A_li + A_he + A_br + A_ki + A_ca + A_lu + A_urn + A_fec;
+} # End of output calculation
+
+End.

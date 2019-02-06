@@ -1,0 +1,134 @@
+# ==============================================================================
+# Two-compartment model with first-order absorption rate and 
+# linear elimination (metabolism or other route of elimination) 
+#
+# version 2
+#
+# Units: 
+# - time in hours
+# - volumes in liters
+# - masses of substances in micromoles
+# - concentrations of substances in microM
+#
+# version 1 - Frederic Bois - Dec 2016
+# version 2 - Nan-Hung Hsieh - Feb 2018
+# Updated:
+# - Add IV and delay oral doses
+# ==============================================================================
+
+States  = {Q_central,       # Quantity in central compartment (micromoles)
+           Q_periph,        # ~           peripheral compartment
+           Q_to_release,       # ~        to release
+           Q_gi,          # ~        in stomach (micromoles)
+           Q_elim};         # ~        eliminated
+
+Outputs = {C_central,       # Concentration in central compartment (microM)
+           Q_total,         # Total quantity for mass balance
+           lnQ_to_release,
+           lnQ_gi,
+           lnQ_periph,
+           lnQ_elim,
+           lnQ_total,
+           lnC_central};        
+
+Inputs  = {PO_dose,  # immediate dose, in micromoles / h 
+           IV_dose_rate};
+
+# Default parameter values
+# ========================
+
+# Dosage forms: 0/1 switches, mutually exclusive,
+# only one on them should be set to 1
+G_immediate = 1; # immediate release (default)
+G_delayed = 0; 
+
+# Input setting
+Period = 12.0; # period of the exposure/no exposure cycle (h)
+TChng = 0.01; # infusion duration (h)
+PO_dose = PerDose(1, Period, 0, 0.01);
+
+# Rate constant (/h)
+Kr;  # Release rate
+Ka;  # Absortion rate
+Ke; # Elimination rate 
+
+lnKr = log(1.0);  
+lnKa = log(1.0);  
+lnKe = log(0.05);  
+
+# Volumes (L)
+# https://sepia.unil.ch/pharmacology/index.php?id=90
+V_central;
+lnV_central = log(0.3);
+
+# Transfer rate constants between compartments (1/h)
+Kc2p;
+Kp2c;
+
+lnKc2p = log(11);
+lnKp2c = log(5);
+
+# Statistical parameters
+# ========================
+# Population mean
+M_lnKr; 
+M_lnKa; 
+M_lnKe; 
+M_lnV_central; 
+M_lnKc2p; 
+M_lnKp2c; 
+
+# Variances inter individual
+Vr_lnKr; 
+Vr_lnKa; 
+Vr_lnKe; 
+Vr_lnV_central; 
+Vr_lnKc2p; 
+Vr_lnKp2c; 
+
+# Variances intra individual
+Va_lnKr; 
+Va_lnKa; 
+Va_lnKe; 
+Va_lnV_central; 
+Va_lnKc2p; 
+Va_lnKp2c;
+
+#  Data Error (Ve_...)
+# ========================
+
+Ve_lnC_central;
+
+Initialize {
+Kr = exp(lnKr);
+Ka = exp(lnKa);
+V_central = exp(lnV_central);
+Kc2p = exp(lnKc2p);
+Kp2c = exp(lnKp2c);
+Ke = exp(lnKe);
+
+} # End of model scaling
+
+Dynamics {
+
+    PO_dose_rate = PO_dose / TChng; # PO dose rate (into stomach) (mg/hr)  
+   
+  dt (Q_to_release) = (G_immediate > 0.5 ?  -1 : (G_delayed > 0.5 ? PO_dose_rate - Kr * Q_to_release : 0.0));
+  dt (Q_gi) = (G_immediate > 0.5 ? PO_dose_rate : (G_delayed > 0.5 ? Kr * Q_to_release : 0.0)) - Ka * Q_gi;
+  dt (Q_elim) = Ke * Q_central;
+  dt (Q_periph)  = Kc2p * Q_central - Kp2c * Q_periph;
+  dt (Q_central) = IV_dose_rate +  Ka * Q_gi - dt(Q_elim) - dt(Q_periph);
+}
+
+CalcOutputs {
+  C_central = (Q_central < 0 ? 0 : Q_central / V_central);
+  Q_total   = (G_immediate > 0.5 ? (Q_gi + Q_central + Q_periph + Q_elim) : (G_delayed > 0.5 ? Q_to_release + Q_gi + Q_central + Q_periph + Q_elim : 0.0));
+  lnQ_to_release = (Q_to_release < 0 ? log(10E-30) : log(Q_to_release));
+  lnQ_gi =  (Q_gi < 0 ? log(10E-30) : log(Q_gi));
+  lnQ_periph = (Q_periph < 0 ? log(10E-30) : log(Q_periph));
+  lnQ_elim =  (Q_elim < 0 ? log(10E-30) : log(Q_elim));
+  lnQ_total =  (Q_total < 0 ? log(10E-30) : log(Q_total));
+  lnC_central = log(C_central);
+}
+
+End.

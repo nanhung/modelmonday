@@ -1,0 +1,518 @@
+Integrate(Lsodes, 1.0e-5, 3.09e-7, 1);
+MCMC("apap58.c01.out", 
+"", "", 
+300000, 0, 100, 300000, 1111); # Full calibration
+
+
+Level { # Population Level
+
+# Population parameters to be calibrated
+# ======================================
+# Formating for following section
+# Distrib(M_lnparam, Uniform, low, high)
+# Remove the ... and fill these in
+# ======================================
+
+# Original sensitive parameters (21)
+
+Distrib(M_lnTg, TruncNormal, -1.4552, 0.5, -2.5, 0.0);
+Distrib(M_lnTp, TruncNormal, -3.401, 0.5, -4.5, -2.5);
+
+Distrib(M_lnCYP_Km, TruncNormal, 4.867, 1., 4.1431, 5.347);
+Distrib(M_lnCYP_VmaxC, Uniform, -2., 5.); 
+
+Distrib(M_lnSULT_Km_apap, TruncNormal, 5.703, 1.0, 4.24, 8.0); 
+Distrib(M_lnSULT_Ki, TruncNormal, 6.265, 0.5, 5.4337, 6.7129);
+Distrib(M_lnSULT_Km_paps, TruncNormal, -0.6931, 0.5, -3., 0.);
+Distrib(M_lnSULT_VmaxC, Uniform, 0., 15); 
+
+Distrib(M_lnUGT_Km, TruncNormal, 8.6995, 1., 7.6009, 9.3926); 
+Distrib(M_lnUGT_Ki, TruncNormal, 10.968, 0.5, 9.998, 11.451);
+Distrib(M_lnUGT_Km_GA, TruncNormal, -0.6931, 0.5, -3., 0.);
+Distrib(M_lnUGT_VmaxC, Uniform, 0., 15); 
+
+Distrib(M_lnKm_AG, TruncNormal, 9.903, 0.3, 8.071, 10.513); 
+Distrib(M_lnVmax_AG, Uniform, 7., 15.); 
+Distrib(M_lnKm_AS, TruncNormal,  10.039, 0.22, 8.974, 10.5427); 
+Distrib(M_lnVmax_AS, Uniform, 7., 15.); 
+
+Distrib(M_lnkGA_syn, Uniform, 0., 13);
+Distrib(M_lnkPAPS_syn, Uniform, 0., 13);
+
+Distrib(M_lnCLC_APAP, Uniform, -6., 1);
+Distrib(M_lnCLC_AG, Uniform, -6., 1);
+Distrib(M_lnCLC_AS, Uniform, -6., 1);
+
+# Additional sensitive parameters (37)
+
+Distrib(M_lnQCC, TruncNormal, 2.785011 0.4167421 1.785011 3.785011)
+
+Distrib(M_lnVFC, TruncNormal, -1.541779 0.03275559 -1.621779 -1.461779);
+Distrib(M_lnVKC, TruncNormal, -5.426151 0.03269649 -5.506151 -5.346151);
+Distrib(M_lnVGC, TruncNormal, -4.240527 0.03268271 -4.320527 -4.160527);
+Distrib(M_lnVLC, TruncNormal, -3.661264 0.0329753 -3.741264 -3.581264);
+Distrib(M_lnVMC, TruncNormal, -0.9162907 0.03433436 -0.9962907 -0.8362907);
+Distrib(M_lnVBLAC, TruncNormal, -3.717279 0.03347345 -3.797279 -3.637279);
+Distrib(M_lnVBLVC TruncNormal, -2.887775 0.03273873 -2.967775 -2.807775);
+Distrib(M_lnVSC, TruncNormal, -1.687399 0.03359799 -1.767399 -1.607399); 
+
+Distrib(M_lnQFC, TruncNormal, -2.956512 0.03301722 -3.036512 -2.876512);
+Distrib(M_lnQKC, TruncNormal, -1.742969 0.0330541 -1.822969 -1.662969);
+Distrib(M_lnQGC, TruncNormal, -1.709258 0.03202148 -1.789258 -1.629258);
+Distrib(M_lnQLBC, TruncNormal, -3.079114 0.03290164 -3.159114 -2.999114);
+Distrib(M_lnQMC TruncNormal, -1.655482 0.03199564 -1.735482 -1.575482);
+Distrib(M_lnQSC, TruncNormal, -1.966113 0.03363265 -2.046113 -1.886113);  
+
+Distrib(M_lnBP_APAP, Uniform, -2.3, 0);
+
+Distrib(M_lnPF_APAP, TruncNormal, -0.8051967 0.3923243 -1.805197 0.1948033);
+Distrib(M_lnPG_APAP, TruncNormal, -0.09761283 0.4209822 -1.097613 0.9023872);
+Distrib(M_lnPK_APAP, TruncNormal, -0.3410828 0.4099462 -1.341083 0.6589172);
+Distrib(M_lnPL_APAP, TruncNormal, -0.375421 0.3996793 -1.375421 0.624579);
+Distrib(M_lnPM_APAP, TruncNormal, -0.375421 0.4138126 -1.375421 0.624579);
+Distrib(M_lnPR_APAP, TruncNormal, -0.3915622 0.4049084 -1.391562 0.6084378);
+Distrib(M_lnPS_APAP, TruncNormal, -0.5008753 0.3996192 -1.500875 0.4991247);
+
+Distrib(M_lnPF_AG, TruncNormal, -2.055725 0.4159407 -3.055725 -1.055725);
+Distrib(M_lnPG_AG, TruncNormal, -0.830113 0.410936 -1.830113 0.169887);
+Distrib(M_lnPK_AG, TruncNormal, -0.9364934 0.4095666 -1.936493 0.06350656);
+Distrib(M_lnPL_AG, TruncNormal, -1.136314 0.4195047 -2.136314 -0.1363142);
+Distrib(M_lnPM_AG, TruncNormal, -1.090644 0.4141211 -2.090644 -0.09064412);
+Distrib(M_lnPR_AG, TruncNormal, -1.010601 0.4105971 -2.010601 -0.01060141);
+Distrib(M_lnPS_AG, TruncNormal, -1.046969 0.397972 -2.046969 -0.04696906);
+
+Distrib(M_lnPF_AS, TruncNormal, -2.430418 0.4083209 -3.430418 -1.430418);
+Distrib(M_lnPG_AS, TruncNormal, -1.214023 0.4079434 -2.214023 -0.2140231);
+Distrib(M_lnPK_AS, TruncNormal, -1.343235 0.3982327 -2.343235 -0.3432349);
+Distrib(M_lnPL_AS, TruncNormal, -1.594549 0.3955258 -2.594549 -0.5945493);
+Distrib(M_lnPM_AS, TruncNormal, -1.61445 0.4101304 -2.61445 -0.6144505);
+Distrib(M_lnPR_AS, TruncNormal, -1.575036 0.412912 -2.575036 -0.5750365);
+Distrib(M_lnPS_AS, TruncNormal, -1.370421 0.4173879 -2.370421 -0.370421);
+
+# Var
+# Original sensitive parameters (21)
+Distrib(Var_lnTg, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnTp, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnCYP_Km, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnCYP_VmaxC, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnSULT_Km_apap, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnSULT_Ki, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnSULT_Km_paps, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnSULT_VmaxC, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnUGT_Km, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnUGT_Ki, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnUGT_Km_GA, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnUGT_VmaxC, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnKm_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnVmax_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnKm_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnVmax_AS, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnkGA_syn, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnkPAPS_syn, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnCLC_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnCLC_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnCLC_AS, InvGamma, 2.25, 0.3125);
+
+# Additional sensitive parameters (37)
+
+Distrib(Var_lnQCC, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnVFC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVKC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVGC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVLC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVMC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVBLAC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVBLVC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnVSC, InvGamma, 2.25, 0.01);
+
+Distrib(Var_lnQFC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnQKC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnQGC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnQLBC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnQMC, InvGamma, 2.25, 0.01);
+Distrib(Var_lnQSC, InvGamma, 2.25, 0.01);
+
+Distrib(Var_lnBP_APAP, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnPF_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPG_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPK_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPL_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPM_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPR_APAP, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPS_APAP, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnPF_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPG_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPK_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPL_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPM_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPR_AS, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPS_AS, InvGamma, 2.25, 0.3125);
+
+Distrib(Var_lnPF_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPG_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPK_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPL_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPM_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPR_AG, InvGamma, 2.25, 0.3125);
+Distrib(Var_lnPS_AG, InvGamma, 2.25, 0.3125);
+
+# Verr
+Distrib(Verr_lnCPL_APAP_mcgL_samp, LogUniform, 0.01, 0.5);
+Distrib(Verr_lnCPL_AG_mcgL_samp, LogUniform, 0.01, 0.5);
+Distrib(Verr_lnCPL_AS_mcgL_samp, LogUniform, 0.01, 0.5);
+
+#Distrib(Verr_lnCU_APAP_mcg_samp, LogUniform, 0.01, 0.5); 
+#Distrib(Verr_lnCU_AG_mcg_samp, LogUniform, 0.01, 0.5); 
+#Distrib(Verr_lnCU_AS_mcg_samp, LogUniform, 0.01, 0.5);
+
+
+Likelihood(Data(lnCPL_APAP_mcgL), Normal_v, Prediction(lnCPL_APAP_mcgL), Verr_lnCPL_APAP_mcgL_samp);
+Likelihood(Data(lnCPL_AG_mcgL), Normal_v, Prediction(lnCPL_AG_mcgL), Verr_lnCPL_AG_mcgL_samp);
+Likelihood(Data(lnCPL_AS_mcgL), Normal_v, Prediction(lnCPL_AS_mcgL), Verr_lnCPL_AS_mcgL_samp);
+#Likelihood(Data(lnCU_APAP_mcg), Normal_v, Prediction(lnCU_APAP_mcg), Verr_lnCU_APAP_mcg_samp);
+#Likelihood(Data(lnCU_AG_mcg), Normal_v, Prediction(lnCU_AG_mcg), Verr_lnCU_AG_mcg_samp);
+#Likelihood(Data(lnCU_AS_mcg), Normal_v, Prediction(lnCU_AS_mcg), Verr_lnCU_AS_mcg_samp);
+
+
+Level { # Group Level
+# Original sensitive parameters (21)
+
+Distrib(lnTg, TruncNormal_v, M_lnTg, Var_lnTg, -2.5, 0.0);
+Distrib(lnTp, TruncNormal_v, M_lnTp, Var_lnTp, -4.5, -2.5);
+
+Distrib(lnCYP_Km, TruncNormal_v, M_lnCYP_Km, Var_lnCYP_Km, 4.1431, 5.347);
+Distrib(lnCYP_VmaxC, TruncNormal_v, M_lnCYP_VmaxC, Var_lnCYP_VmaxC, -2., 5.); 
+
+Distrib(lnSULT_Km_apap, TruncNormal_v, M_lnSULT_Km_apap, Var_lnSULT_Km_apap, 4.24, 8.);
+Distrib(lnSULT_Ki, TruncNormal_v, M_lnSULT_Ki, Var_lnSULT_Ki, 5.4337, 6.7129);
+Distrib(lnSULT_Km_paps, TruncNormal_v, M_lnSULT_Km_paps, Var_lnSULT_Km_paps, -3., 0.);
+Distrib(lnSULT_VmaxC, TruncNormal_v, M_lnSULT_VmaxC, Var_lnSULT_VmaxC, 0, 15.); 
+
+Distrib(lnUGT_Km, TruncNormal_v, M_lnUGT_Km, Var_lnUGT_Km, 7.6009, 9.3926);
+Distrib(lnUGT_Ki, TruncNormal_v, M_lnUGT_Ki, Var_lnUGT_Ki, 9.998, 11.451);
+Distrib(lnUGT_Km_GA, TruncNormal_v, M_lnUGT_Km_GA, Var_lnUGT_Km_GA, -3., 0.);
+Distrib(lnUGT_VmaxC, TruncNormal_v, M_lnUGT_VmaxC, Var_lnUGT_VmaxC, 0, 15.);
+
+Distrib(lnKm_AG, TruncNormal_v, M_lnKm_AG, Var_lnKm_AG, 8.071, 10.513);
+Distrib(lnVmax_AG, TruncNormal_v,  M_lnVmax_AG, Var_lnVmax_AG, 7., 15.);
+Distrib(lnKm_AS, TruncNormal_v, M_lnKm_AS, Var_lnKm_AS, 8.974, 10.5427);
+Distrib(lnVmax_AS, TruncNormal_v, M_lnVmax_AS, Var_lnVmax_AS, 7., 15.);
+
+Distrib(lnkGA_syn, TruncNormal_v, M_lnkGA_syn, Var_lnkGA_syn, 0, 13.);
+Distrib(lnkPAPS_syn, TruncNormal_v, M_lnkPAPS_syn, Var_lnkPAPS_syn, 0, 13.);
+
+Distrib(lnCLC_APAP, TruncNormal_v, M_lnCLC_APAP, Var_lnCLC_APAP, -6., 1);
+Distrib(lnCLC_AG, TruncNormal_v, M_lnCLC_AG, Var_lnCLC_AG, -6., 1);
+Distrib(lnCLC_AS, TruncNormal_v, M_lnCLC_AS, Var_lnCLC_AS, -6., 1);
+
+# Additional sensitive parameters (37)
+
+Distrib(lnQCC, TruncNormal_v, M_lnQCC, Var_lnQCC, 1.585011, 3.985011); 
+
+Distrib(lnVFC, TruncNormal_v, M_lnVFC, Var_lnVFC, -1.621779 -1.461779);
+Distrib(lnVKC, TruncNormal_v, M_lnVKC, Var_lnVKC, -5.506151 -5.346151);
+Distrib(lnVGC, TruncNormal_v, M_lnVGC, Var_lnVGC, -4.320527 -4.160527);
+Distrib(lnVLC, TruncNormal_v, M_lnVLC, Var_lnVLC, -3.741264 -3.581264);
+Distrib(lnVMC, TruncNormal_v, M_lnVMC, Var_lnVMC, -0.9962907 -0.8362907);
+Distrib(lnVBLAC, TruncNormal_v, M_lnVBLAC, Var_lnVBLAC, -3.797279 -3.637279);
+Distrib(lnVBLVC, TruncNormal_v, M_lnVBLVC, Var_lnVBLVC, -2.967775 -2.807775);
+Distrib(lnVSC, TruncNormal_v, M_lnVSC, Var_lnVSC, -1.767399 -1.607399); 
+
+Distrib(lnQFC, TruncNormal_v, M_lnQFC, Var_lnQFC, -3.036512 -2.876512);
+Distrib(lnQKC, TruncNormal_v, M_lnQKC, Var_lnQKC, -1.822969 -1.662969);
+Distrib(lnQGC, TruncNormal_v, M_lnQGC, Var_lnQGC, -1.789258 -1.629258);
+Distrib(lnQLBC, TruncNormal_v, M_lnQLBC, Var_lnQLBC, -3.159114 -2.999114);
+Distrib(lnQMC TruncNormal_v, M_lnQMC, Var_lnQMC, -1.735482 -1.575482);
+Distrib(lnQSC, TruncNormal_v, M_lnQSC, Var_lnQSC, -2.046113 -1.886113);  
+
+Distrib(lnBP_APAP, TruncNormal_v, M_lnBP_APAP, Var_lnBP_APAP, -2.3, 0); 
+
+Distrib(lnPF_APAP, TruncNormal_v, M_lnPF_APAP Var_lnPF_APAP -1.805197 0.1948033);
+Distrib(lnPG_APAP, TruncNormal_v, M_lnPG_APAP Var_lnPG_APAP -1.097613 0.9023872);
+Distrib(lnPK_APAP, TruncNormal_v, M_lnPK_APAP Var_lnPK_APAP -1.341083 0.6589172);
+Distrib(lnPL_APAP, TruncNormal_v, M_lnPL_APAP Var_lnPL_APAP -1.375421 0.624579);
+Distrib(lnPM_APAP, TruncNormal_v, M_lnPM_APAP Var_lnPM_APAP -1.375421 0.624579);
+Distrib(lnPR_APAP, TruncNormal_v, M_lnPR_APAP Var_lnPR_APAP -1.391562 0.6084378);
+Distrib(lnPS_APAP, TruncNormal_v, M_lnPS_APAP Var_lnPS_APAP -1.500875 0.4991247);
+
+Distrib(lnPF_AG, TruncNormal_v, M_lnPF_AG Var_lnPF_AG -3.055725 -1.055725);
+Distrib(lnPG_AG, TruncNormal_v, M_lnPG_AG Var_lnPG_AG -1.830113 0.169887);
+Distrib(lnPK_AG, TruncNormal_v, M_lnPK_AG Var_lnPK_AG -1.936493 0.06350656);
+Distrib(lnPL_AG, TruncNormal_v, M_lnPL_AG Var_lnPL_AG -2.136314 -0.1363142);
+Distrib(lnPM_AG, TruncNormal_v, M_lnPM_AG Var_lnPM_AG -2.090644 -0.09064412);
+Distrib(lnPR_AG, TruncNormal_v, M_lnPR_AG Var_lnPR_AG -2.010601 -0.01060141);
+Distrib(lnPS_AG, TruncNormal_v, M_lnPS_AG Var_lnPS_AG -2.046969 -0.04696906);
+
+Distrib(lnPF_AS, TruncNormal_v, M_lnPF_AS Var_lnPF_AS -3.430418 -1.430418);
+Distrib(lnPG_AS, TruncNormal_v, M_lnPG_AS Var_lnPG_AS -2.214023 -0.2140231);
+Distrib(lnPK_AS, TruncNormal_v, M_lnPK_AS Var_lnPK_AS -2.343235 -0.3432349);
+Distrib(lnPL_AS, TruncNormal_v, M_lnPL_AS Var_lnPL_AS -2.594549 -0.5945493);
+Distrib(lnPM_AS, TruncNormal_v, M_lnPM_AS Var_lnPM_AS -2.61445 -0.6144505);
+Distrib(lnPR_AS, TruncNormal_v, M_lnPR_AS Var_lnPR_AS -2.575036 -0.5750365);
+Distrib(lnPS_AS, TruncNormal_v, M_lnPS_AS Var_lnPS_AS -2.370421 -0.370421);
+
+Level { # Study 1
+Simulation { #Volak (2013) 325 mg 9
+
+mgkg_flag = 0;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mg = 325;
+lnOralDose_APAP_mg = 5.78383;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mg = 0.;
+lnIVDose_APAP_mg = 0.;
+
+BW = 68.;
+
+#Distrib(BW, TruncNormal, 68.00, 17.56, 61.00, 93.00);
+
+Print(lnCPL_APAP_mcgL, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 6.0, 8.0, 10.0);
+Data(lnCPL_APAP_mcgL, 7.5756, 7.8973, 8.0359, 7.9409, 7.7536, 7.5909, 7.3395, 6.6758, 6.1654, -1);#, 5.8464);
+# Data(Verr_lnCPL_APAP_mcgL, 0.2667, 0.0743, 0.1068, 0.121, 0.1373, 0.1263, 0.1299, 0.1173, 0.1807, -1);# 0.1243);
+
+Print(lnCPL_AG_mcgL, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 6.0, 8.0, 10.0);
+Data(lnCPL_AG_mcgL, 5.7038, 7.6639, 8.149, 8.3687, 8.468, 8.5192, 8.4338, 8.052, 7.5549, 7.1624);
+# Data(Verr_lnCPL_AG_mcgL, 0.2233, 0.23, 0.1416, 0.1044, 0.0882, 0.1098, 0.1087, 0.1624, 0.1309, 0.1473);
+
+Print(lnCPL_AS_mcgL, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 6.0, 8.0, 10.0);
+Data(lnCPL_AS_mcgL, 6.5539, 7.3524, 7.7098, 7.7579, 7.7007, 7.5909, 7.4384, 6.9177, 6.4489, 6.1841);
+# Data(Verr_lnCPL_AS_mcgL, 0.1154, 0.1603, 0.1256, 0.1838, 0.2081, 0.1768, 0.2118, 0.2277, 0.2326, 0.2124);
+
+}
+}  # End Study 1
+
+Level { # Study 2
+Simulation { # Jensen (2004) 5
+
+mgkg_flag = 0;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mg = 1000.0;
+lnOralDose_APAP_mg = 6.90776;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mg = 0.;
+lnIVDose_APAP_mg = 0.;
+
+
+BW = 68.;
+
+# Logged data
+Print(lnCPL_APAP_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0);#, 24.0);
+Data(lnCPL_APAP_mcgL, 9.2797, 9.4681, 9.2923, 9.0719, 8.7246, 8.3994, 8.1881, 7.892, 7.3309, -1, -1);#, 6.9294, 6.5891);#, 4.9241);
+# Data(Verr_lnCPL_APAP_mcgL, 0.1001, 0.0713, 0.0432, 0.0851, 0.0565, 0.0646, 0.0546, 0.0508, 0.0594, -1, -1);#, 0.0385, 0.1351);#, 0.7143);
+## Data(Verr_lnCPL_APAP_mcgL, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+
+Print(lnCPL_AG_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0);#, 24.0);
+Data(lnCPL_AG_mcgL, 8.3935, 9.3632, 9.8072, 9.982, 10.0493, 9.926, 9.7817, 9.552, 9.1014, 8.6473, -1);#, 8.2504);#, 6.5232);
+# Data(Verr_lnCPL_AG_mcgL, 0.3548, 0.1096, 0.0613, 0.0711, 0.0764, 0.1072, 0.1146, 0.1256, 0.146, 0.1494, -1);#, 0.1556);#, 0.375);
+## Data(Verr_lnCPL_AG_mcgL, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+
+Print(lnCPL_AS_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0);#, 24.0);
+Data(lnCPL_AS_mcgL, 8.317, 8.7968, 8.9727, 8.887, 8.7968, 8.539, 8.4138, 8.1712, 7.6798, 7.2098, -1);#, 6.8372);#, 5.4826);
+# Data(Verr_lnCPL_AS_mcgL, 0.2034, 0.1084, 0.0997, 0.0511, 0.0804, 0.0724, 0.0615, 0.0654, 0.0556, 0.0222, -1);# 0.0645);#, 0.25);
+## Data(Verr_lnCPL_AS_mcgL, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+
+}
+}  # End Study 2
+
+Level { # Study 3
+Simulation { # Shinoda (2007) 5
+
+mgkg_flag = 0;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mg = 1000;
+lnOralDose_APAP_mg = 6.9077;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mg = 0.;
+lnIVDose_APAP_mg = 0.;
+
+
+BW = 60.;
+
+Print(lnCPL_APAP_mcgL, 2.50E-01, 5.00E-01, 7.50E-01, 1.00E+00, 2.00E+00, 3.00E+00, 4.00E+00, 6.00E+00);
+Data(lnCPL_APAP_mcgL, 9.6989, 9.7585, 9.6486, 9.5324, 9.2686, 9.0372, 8.8291, 8.4617);
+# Data(Verr_lnCPL_APAP_mcgL, 0.2209, 0.1329, 0.1355, 0.1739, 0.1981, 0.1795, 0.1801, 0.1332);
+
+Print(lnCPL_AG_mcgL, 2.50E-01, 5.00E-01, 7.50E-01, 1.00E+00, 2.00E+00, 3.00E+00, 4.00E+00, 6.00E+00);
+Data(lnCPL_AG_mcgL, 7.2842, 9.1686, 9.4551, 9.6247, 9.9808, 9.9091, 9.7584, 9.3016);
+# Data(Verr_lnCPL_AG_mcgL, .2654, 0.2822, 0.2678, 0.2647, 0.1824, 0.1948, 0.2065, 0.2055);
+
+Print(lnCPL_AS_mcgL, 2.50E-01, 5.00E-01, 7.50E-01, 1.00E+00, 2.00E+00, 3.00E+00, 4.00E+00, 6.00E+00);
+Data(lnCPL_AS_mcgL, 7.5479, 8.4928, 8.5595, 8.5595, 8.5884, 8.4446, 8.261, 7.7043);
+# Data(Verr_lnCPL_AS_mcgL, 0.3065, 0.1599, 0.2845, 0.2493, 0.1766, 0.2039, 0.2648, 0.2069);
+
+}
+}  # End Study 3
+
+Level { # Study 4
+Simulation { # Kim (2011) 2
+
+mgkg_flag = 0;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mg = 1000.;
+lnOralDose_APAP_mg = 6.90776;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mg = 0.;
+lnIVDose_APAP_mg = 0.;
+
+
+BW = 70.;
+
+Print(lnCPL_APAP_mcgL, 0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8, 10, 12);#, 24);
+Data(lnCPL_APAP_mcgL, 8.3405, 8.0456, 8.5271, 9.0607, 9.0927, 9.0466, 8.8393, 8.2188, 7.5704, -1, -1);#, 7.0733, 6.6386);#, 5.3706);
+# Data(Verr_lnCPL_APAP_mcgL, 0.432, 1.5417, 0.9188, 0.6725, 0.5298, 0.4605, 0.4029, 0.2992, 0.3351, -1, -1);# 0.3475, 0.4005, 0.4698);
+
+Print(lnCPL_AG_mcgL, 0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8, 10, 12);#, 24);
+Data(lnCPL_AG_mcgL, 6.2383, 6.9276, 8.1831, 8.7749, 9.1485, 9.5819, 9.705, 9.5956, 9.1788, 8.6945, -1);#, 8.1887);#, 6.2344);
+# Data(Verr_lnCPL_AG_mcgL, 0.1816, 1.4608, 0.4804, 0.5178, 0.4043, 0.3379, 0.2927, 0.1633, 0.2074, -1);#0.2261, 0.2972, 0.3647);
+
+Print(lnCPL_AS_mcgL, 0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8, 10, 12);#, 24);
+Data(lnCPL_AS_mcgL, 6.2383, 6.5482, 7.6917, 8.1577, 8.3939, 8.5773, 8.5679, 8.2242, 7.7187, 7.2226, -1);#, 6.7558);#, 5.4424);
+# Data(Verr_lnCPL_AS_mcgL, 0.1816, 1.5358, 0.4247, 0.7049, 0.5249, 0.3691, 0.4068, 0.3351, 0.4133, -1);# 0.4431, 0.6496, 0.2035);
+
+}
+}  # End Study 4
+
+
+Level { # Study 5
+Simulation { # Prescott1 3 (1980)
+
+mgkg_flag = 1;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mgkg = 20.0;
+lnOralDose_APAP_mgkg = 2.99573;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mgkg = 0.;
+lnIVDose_APAP_mgkg = 0.;
+
+BW = 72.;
+
+# Logged
+Print(lnCPL_APAP_mcgL, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0);
+Data(lnCPL_APAP_mcgL, 9.6486, 9.8363, 9.8416, 9.7981, 9.655, 9.5178, 9.2203, 8.9187, 8.294, 7.836);
+# Data(Verr_lnCPL_APAP_mcgL, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3);
+
+Print(lnCPL_AG_mcgL, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0);
+Data(lnCPL_AG_mcgL, 8.0722, 8.9804, 9.5047, 9.806, 10.1138, 10.2139, 10.1567, 10.0871, 9.6304, 9.2425);
+# Data(Verr_lnCPL_AG_mcgL,  0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3);
+
+Print(lnCPL_AS_mcgL, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0);
+Data(lnCPL_AS_mcgL, 8.1743, 8.8166, 9.0136, 9.1653, 9.1427, 9.0802, 8.9097, 8.8052, 8.394, 7.9587);
+# Data(Verr_lnCPL_AS_mcgL, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3);
+
+}
+}  # End Study 5
+
+Level { # Study 6
+Simulation { #Chan (1997) 3
+
+mgkg_flag = 1;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mgkg = 20.0;
+lnOralDose_APAP_mgkg = 2.99573;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mgkg = 0.;
+lnIVDose_APAP_mgkg = 0.;
+
+BW = 57.;
+
+
+Print(lnCPL_APAP_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0);#, 24.0);
+Data(lnCPL_APAP_mcgL, 9.9184, 9.8934, 9.8092, 9.6486, 9.3147, 9.0131, 8.7323, 8.4949, 8.1719, 8.0678);#, 4.9904);
+# Data(Verr_lnCPL_APAP_mcgL, 0.064, 0.0556, 0.0549, 0.0258, 0.036, 0.0926, 0.0565, 0.0695, 0.1384, 0.1191);#, 0.259);
+
+Print(lnCPL_AG_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0);#, 24.0);
+Data(lnCPL_AG_mcgL, 8.8496, 9.6346, 9.9605, 10.0689, 10.0689, 9.9585, 9.8012, 9.6501, 9.4602, 9.3075);#, 8.388);
+# Data(Verr_lnCPL_AG_mcgL, 0.2764, 0.204, 0.0736, 0.156, 0.1697, 0.1619, 0.1811, 0.1827, 0.1804, 0.1727);#, 0.236);
+
+Print(lnCPL_AS_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0);#, 24.0);
+Data(lnCPL_AS_mcgL, 8.5855, 8.9833, 9.1311, 9.1195, 8.9737, 8.8098, 8.6137, 8.4609, 8.253, 8.0158);#, 7.186);
+# Data(Verr_lnCPL_AS_mcgL, 0.08, 0.0921, 0.0993, 0.0921, 0.0969, 0.105, 0.1222, 0.1489, 0.1554, 0.1616);#, 0.3078);
+
+}
+}  # End Study 6
+
+Level { # Study 7
+Simulation { # Critchley et al. (2005)   Grace 1
+
+mgkg_flag = 1;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mgkg = 20.0;
+lnOralDose_APAP_mgkg = 2.99573;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mgkg = 0.;
+lnIVDose_APAP_mgkg = 0.;
+
+
+BW = 57.;
+
+Print(lnCPL_APAP_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0);#, 24.0);
+Data(lnCPL_APAP_mcgL, 9.9942, 9.8147, 9.6291, 9.488, 9.2496, 8.9708, 8.6604, 8.3825, 8.197, 7.9374, -1, -1, -1, -1);#, 7.6449, 7.5653, 7.2226, -1, -1);#, 7.0211);#, 5.451);
+# Data(Verr_lnCPL_APAP_mcgL, 0.1553, 0.0929, 0.0658, 0.0909, 0.0962, 0.1296, 0.1127, 0.1419, 0.1488, 0.1714, 0.1627, -1, -1, -1, -1);#, 0.1399, 0.1825, 0.1875, 0.1631);
+
+Print(lnCPL_AG_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0);#, 12.0);#, 24.0);
+Data(lnCPL_AG_mcgL, 8.3168, 9.4047, 9.6884, 9.8343, 9.8896, 9.8319, 9.6924, 9.5144, 9.2735, 9.0257, 8.8558, 8.7345, -1);#, 8.4549, 8.2283);#, 6.4594);
+# Data(Verr_lnCPL_AG_mcgL, 0.2646, 0.0713, 0.0792, 0.0916, 0.101, 0.093, 0.0588, 0.0655, 0.065, 0.0938, 0.071, 0.0697, -1);# 0.1152, 0.1329, 0.1763);
+
+Print(lnCPL_AS_mcgL, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0);#, 12.0);#, 24.0);
+Data(lnCPL_AS_mcgL, 8.4314, 8.9362, 9.0191, 8.9872, 8.9158, 8.7388, 8.5682, 8.3765, 8.204, 7.964, 7.7515, 7.5234, -1);#, 7.3287, 7.1572);#, 5.5002);
+# Data(Verr_lnCPL_AS_mcgL, 0.1567, 0.1187, 0.1019, 0.1071, 0.1068, 0.0956, 0.1134, 0.1408, 0.1548, 0.1649, 0.1711, 0.1736, -1);#, 0.1928, 0.1776, 0.1813);
+
+}
+}  # End Study 7
+
+Level { # Study 8
+Simulation { # Chiew1 1 (2010)
+
+mgkg_flag = 1.;
+
+OralExp_APAP = NDoses(2, 1 0, 0 0.001);
+OralDose_APAP_mgkg = 79.;
+lnOralDose_APAP_mgkg = 4.3694;
+
+IVExp_APAP = 0.;
+IVDose_APAP_mgkg = 0.;
+lnIVDose_APAP_mgkg = 0.;
+
+BW = 73.11;
+
+Print(lnCPL_APAP_mcgL, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0);#, 16.0, 24.0);
+Data(lnCPL_APAP_mcgL, 11.1496, 11.357, 11.1583, 10.9794, 10.9794, 10.8735, 10.6532, 10.1775, 9.6145, -1);#, 9.0993, 8.5536);#, 7.7972, 7.1322);
+# Data(Verr_lnCPL_APAP_mcgL, 0.3065, 0.2473, 0.2026, 0.1366, 0.0747, 0.0401, 0.0429, 0.0345, 0.0595, 0.1199);#, 0.3848, 0.472, 0.401);
+
+Print(lnCPL_AG_mcgL, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0);#, 16.0, 24.0);
+Data(lnCPL_AG_mcgL, 9.3288, 10.1109, 10.5093, 11.0057, 11.2879, 11.5434, 11.5929, 11.4362, 11.0941, 10.7324, 10.3191);#, 9.6129, 8.2418);
+# Data(Verr_lnCPL_AG_mcgL, 0.2471, 0.2128, 0.2054, 0.1848, 0.1516, 0.0762, 0.0574, 0.0636, 0.0597, 0.0571, 0.0907);#, 0.1663, 0.4138);
+
+Print(lnCPL_AS_mcgL, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0);#, 16.0, 24.0);
+Data(lnCPL_AS_mcgL, 8.6702, 9.1882, 9.3634, 9.577, 9.7297, 9.8477, 9.9619, 9.8872, 9.689, 9.4287, 9.0757);#, 8.4879, 7.0746);
+# Data(Verr_lnCPL_AS_mcgL, 0.1587, 0.0946, 0.0734, 0.1282, 0.0949, 0.1467, 0.1178, 0.0952, 0.1046, 0.1022, 0.127);#, 0.1381, 0.5714);
+
+}
+}  # End Study 8
+
+} # Group
+} # Population
+End.

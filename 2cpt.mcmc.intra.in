@@ -1,0 +1,241 @@
+#------------------------------------------------------------------------------
+# 2cpt.mcmc.intra.in
+#
+# 2 compartment model 
+#
+# Copyright (c) 1993-2008 Free Software Foundation, Inc.
+#------------------------------------------------------------------------------
+Integrate (Lsodes, 1e-7, 1e-9, 1);
+
+#MCMC ("2cpt.mcmc.intra.1.out", "", "", 20000, 0, 10, 20000, 1111);
+MCMC ("2cpt.mcmc.intra.1v.out", "2cpt.mcmc.intra.1.out", "", 20000, 1, 10, 20000, 1111); # validation
+#MCMC ("2cpt.mcmc.intra.2.out", "", "", 20000, 0, 10, 20000, 2222);
+#MCMC ("2cpt.mcmc.intra.3.out", "", "", 20000, 0, 10, 20000, 3333);
+#MCMC ("2cpt.mcmc.intra.4.out", "", "", 20000, 0, 10, 20000, 4444);
+
+
+Level { # population
+
+  Distrib(M_lnKr, Uniform, -3.0, -1.0);
+  Distrib(M_lnKa, Uniform, 1.0, 2.3);
+  Distrib(M_lnV_central, TruncNormal, 3.56, 1, 2.06, 5.06);
+  Distrib(M_lnKe, TruncNormal, -1.68, 0.5, -2.68, -0.68);
+  Distrib(M_lnKc2p, TruncNormal, 2.41, 0.5, 1.41, 3.41); 
+  Distrib(M_lnKp2c, TruncNormal, 1.61, 0.5, 0.61, 2.61);
+    
+        # Inter individual variances:
+  Distrib (Vr_lnKr,        InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKa,        InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnV_central, InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKe,        InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKc2p,      InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKp2c,      InvGamma, 2.25, 0.3125);
+
+        # Intra individual variances:
+  Distrib (Va_lnKr,        InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnKa,        InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnV_central, InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnKe,        InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnKc2p,      InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnKp2c,      InvGamma, 2.25, 0.3125);
+
+
+  Distrib(Ve_lnC_central, LogUniform, 0.01, 0.5);
+  Likelihood(lnC_central, Normal_v, Prediction(lnC_central), Ve_lnC_central);
+  
+  Level { # individuals
+
+    Distrib (lnKr,         TruncNormal_v, M_lnKr,        Vr_lnKr,          -3.0,  -1.0);
+    Distrib (lnKa,         TruncNormal_v, M_lnKa,        Vr_lnKa,          1.0,  2.3);
+    Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Vr_lnV_central,   2.06, 5.06);
+    Distrib (lnKe,         TruncNormal_v, M_lnKe,        Vr_lnKe,          -2.68,  -0.68);
+    Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Vr_lnKc2p,        1.41,  3.41);
+    Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Vr_lnKp2c,        0.61,  2.61);
+
+    Level { # subject M,
+    
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+      Experiment { # Subject 1, Experiment 1
+
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 3.471712 3.418603 3.418603 3.261417 3.217932 -1 2.937630 -1);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 1.809165 2.301641 2.589323 2.407002 2.812467 3.261417 3.074831 3.100149);
+      }
+    } # end subject M
+    
+    Level { # subject N,
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+
+      Experiment { # Subject 1, Experiment 1
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 3.454321 3.585657 3.687935 3.454321 3.074831 3.074831 2.877005 2.937630);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 1.357179 2.355708 2.546764 2.845257 2.743474 2.502312 2.546764 2.669366);
+     }
+    } # end subject N    
+
+    Level { # subject O,
+    
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+      Experiment { # Subject 1, Experiment 1
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 3.911079 3.381561 3.381561 3.381561 3.172469 2.966617 2.877005 2.669366);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+ 
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, -1 2.502312 2.778565 3.022187 3.100149 2.937630       -1       -1);
+      }
+    } # end subject O       
+    
+    Level { # subject P,
+    
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+      Experiment { # Subject 1, Experiment 1
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 3.362513 3.343095 3.217932 3.124841 3.124841 3.124841 2.877005 2.669366);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 1.809165 2.244483 2.407002 2.407002 2.589323 2.743474 2.669366 2.907777);
+      }
+    } # end subject P 
+
+    Level { # subject Q,
+
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+      Experiment { # Subject 1, Experiment 1
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 3.148939 3.124841 2.966617 2.778565 2.630145 2.050327 1.896176 1.809165);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, -1  -1 1.713854 2.407002 2.589323 2.589323 2.183858 2.301641);
+      }
+    } # end subject Q
+    
+    Level { # subject R,
+
+     Distrib (lnKr,         TruncNormal_v, M_lnKr,        Va_lnKr,          -3.0,  -1.0);
+     Distrib (lnKa,         TruncNormal_v, M_lnKa,        Va_lnKa,          1.0,  2.3);
+     Distrib (lnV_central,  TruncNormal_v, M_lnV_central, Va_lnV_central,   2.06, 5.06);
+     Distrib (lnKe,         TruncNormal_v, M_lnKe,        Va_lnKe,          -2.68,  -0.68);
+     Distrib (lnKc2p,       TruncNormal_v, M_lnKc2p,      Va_lnKc2p,        1.41,  3.41);
+     Distrib (lnKp2c,       TruncNormal_v, M_lnKp2c,      Va_lnKp2c,        0.61,  2.61);
+
+      Experiment { # Subject 1, Experiment 1
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 1; # immediate release, dissolved (default)
+        G_delayed = 0;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, 2.877005 2.907777 2.877005 2.743474 2.301641 2.050327 1.809165 1.809165);
+      }
+
+      Experiment { # Subject 1, Experiment 2
+        Period = 12.0; # period of the exposure/no exposure cycle (h)    
+        PO_dose = PerDose(1054.56, Period, 0, 0.01);
+        G_immediate = 0; # immediate release, dissolved (default)
+        G_delayed = 1;   # delayed release,   dissolved
+
+        Print (lnC_central, 1 2 3 4 6 8 10 12);
+        Data  (lnC_central, -1 -1 2.183858 2.244483 2.301641 2.907777 2.630145 2.778565);
+      }
+    } # end subject R     
+  } # end subjects
+} # end pop
+
+End.

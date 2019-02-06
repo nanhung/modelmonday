@@ -1,0 +1,124 @@
+#------------------------------------------------------------------------------
+# zno.mcmc.1.in
+#------------------------------------------------------------------------------
+Integrate (Lsodes, 1e-7, 1e-9, 1);
+
+#MCMC ("zno.mcmc.1.out", "", "", 20000, 0, 10, 20000, 1111);
+MCMC ("zno.mcmc.1v.out", "zno.mcmc.1.out", "", 20000, 1, 10, 20000, 1111);
+
+Level { # population
+  
+  # Population mean:
+
+  Distrib(M_QCC, TruncNormal, 2.2, 0.3, 1.6, 2.8);  
+  #Distrib(M_Pct_Q_ki, TruncNormal, -2.4, 0.2, -2.6, -2.2); 
+  
+  Distrib(M_lnP_li, Uniform, -2.3, 2.3);
+  Distrib(M_lnP_ki, Uniform, -4.6, 4.6);
+  Distrib(M_lnP_sp, Uniform, -2.3, 2.3);
+  Distrib(M_lnP_lu, Uniform, -4.6, 4.6);
+  Distrib(M_lnP_he, Uniform, -2.3, 2.3);
+  Distrib(M_lnP_gi, Uniform, -2.3, 2.3);
+  Distrib(M_lnP_br, Uniform, -6.9, 6.9);
+  Distrib(M_lnP_ca, Uniform, -6.9, 6.9);
+  Distrib(M_lnk_gi, Uniform, -9.21, 0);
+#  Distrib(M_lnk_li, Uniform, -9.21, 0);
+  Distrib(M_lnk_ki, Uniform, -13.8, 0);
+
+  # Population variances:
+  Distrib (V_QCC, InvGamma, 2.25, 0.3125);
+  #Distrib (V_Pct_Q_ki, InvGamma, 2.25, 0.3125);
+  
+  Distrib (V_lnP_li, InvGamma, 2.25, 0.3125);
+  Distrib (V_lnP_ki, InvGamma, 2.25, 0.3125);
+  Distrib (V_lnP_sp, InvGamma, 2.25, 0.3125);  
+  Distrib (V_lnP_lu, InvGamma, 2.25, 0.3125);
+  Distrib (V_lnP_he, InvGamma, 2.25, 0.3125);
+  Distrib (V_lnP_gi, InvGamma, 2.25, 0.3125);
+  Distrib (V_lnP_br, InvGamma, 2.25, 0.3125);  
+  Distrib (V_lnP_ca, InvGamma, 2.25, 0.3125);  
+  Distrib (V_lnk_gi, InvGamma, 2.25, 0.3125);
+#  Distrib (V_lnk_li, InvGamma, 2.25, 0.3125);  
+  Distrib (V_lnk_ki, InvGamma, 2.25, 0.3125);
+  
+  Distrib(Ve_lnC_ven, LogUniform, 0.01, 0.5);
+  Distrib(Ve_lnC_lu, LogUniform, 0.01, 0.5);
+  Distrib(Ve_lnC_he, LogUniform, 0.01, 0.5);
+  Distrib(Ve_lnC_sp, LogUniform, 0.01, 0.5);
+  Distrib(Ve_lnC_li, LogUniform, 0.01, 0.5);
+  Distrib(Ve_lnC_gi, LogUniform, 0.01, 0.5);
+  #Distrib(Ve_lnC_ki, LogUniform, 0.01, 0.5);
+  
+  Likelihood(lnC_ven, Normal_v, Prediction(lnC_ven), Ve_lnC_ven);
+  Likelihood(lnC_lu, Normal_v, Prediction(lnC_lu), Ve_lnC_lu);
+  Likelihood(lnC_he, Normal_v, Prediction(lnC_he), Ve_lnC_he);
+  Likelihood(lnC_sp, Normal_v, Prediction(lnC_sp), Ve_lnC_sp);
+  Likelihood(lnC_li, Normal_v, Prediction(lnC_li), Ve_lnC_li);  
+  Likelihood(lnC_gi, Normal_v, Prediction(lnC_gi), Ve_lnC_gi);
+  #Likelihood(lnC_ki, Normal_v, Prediction(lnC_ki), Ve_lnC_ki);
+  
+  Level { # group
+
+    Distrib (QCC, TruncNormal_v, M_QCC, V_QCC, 1.6, 2.8);
+    #Distrib (Pct_Q_ki, TruncNormal_v, M_Pct_Q_ki, V_Pct_Q_ki, -2.6, -2.2);    
+    
+    Distrib (lnP_li, TruncNormal_v, M_lnP_li, V_lnP_li, -2.3, 2.3);
+    Distrib (lnP_ki, TruncNormal_v, M_lnP_ki, V_lnP_ki, -4.6, 4.6);
+    Distrib (lnP_sp, TruncNormal_v, M_lnP_sp, V_lnP_sp, -2.3, 2.3);
+    Distrib (lnP_lu, TruncNormal_v, M_lnP_lu, V_lnP_lu, -4.6, 4.6);
+    Distrib (lnP_he, TruncNormal_v, M_lnP_he, V_lnP_he, -2.3, 2.3);
+    Distrib (lnP_gi, TruncNormal_v, M_lnP_gi, V_lnP_gi, -2.3, 2.3);
+    Distrib (lnP_br, TruncNormal_v, M_lnP_br, V_lnP_br, -6.9, 6.9);
+    Distrib (lnP_ca, TruncNormal_v, M_lnP_ca, V_lnP_ca, -6.9, 6.9);    
+    Distrib (lnk_gi, TruncNormal_v, M_lnk_gi, V_lnk_gi, -9.21, 0);    
+#    Distrib (lnk_li, TruncNormal_v, M_lnk_li, V_lnk_li, -9.21, 0);    
+    Distrib (lnk_ki, TruncNormal_v, M_lnk_ki, V_lnk_ki, -13.8, 0);
+    
+    Level { # Zn(NO3)2,
+    
+    Distrib (QCC, TruncNormal_v, QCC, V_QCC, 1.6, 2.8);    
+    #Distrib (Pct_Q_ki, TruncNormal_v, Pct_Q_ki, V_Pct_Q_ki, -2.6, -2.2);        
+    
+    Distrib (lnP_li, TruncNormal_v, lnP_li, V_lnP_li, -2.3, 2.3);
+    Distrib (lnP_ki, TruncNormal_v, lnP_ki, V_lnP_ki, -4.6, 4.6);
+    Distrib (lnP_sp, TruncNormal_v, lnP_sp, V_lnP_sp, -2.3, 2.3);
+    Distrib (lnP_lu, TruncNormal_v, lnP_lu, V_lnP_lu, -4.6, 4.6);
+    Distrib (lnP_he, TruncNormal_v, lnP_he, V_lnP_he, -2.3, 2.3);
+    Distrib (lnP_gi, TruncNormal_v, lnP_gi, V_lnP_gi, -2.3, 2.3);
+    Distrib (lnP_br, TruncNormal_v, lnP_br, V_lnP_br, -6.9, 6.9);
+    Distrib (lnP_ca, TruncNormal_v, lnP_ca, V_lnP_ca, -6.9, 6.9);    
+    Distrib (lnk_gi, TruncNormal_v, lnk_gi, V_lnk_gi, -9.21, 0);    
+#    Distrib (lnk_li, TruncNormal_v, lnk_li, V_lnk_li, -9.21, 0);    
+    Distrib (lnk_ki, TruncNormal_v, lnk_ki, V_lnk_ki, -13.8, 0);
+
+      Experiment { # Subject 1, Experiment 1
+
+    TChng =  0.01 ;
+    IV_dose = NDoses(2, 0.12 0 , 0 0.01 );
+
+    Print (lnC_ven, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_ven, 1.332 0.668 -0.211 -0.342 -0.416 -0.274 -0.342 -0.693 -3.219);
+    Print (lnC_lu, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_lu, 1.4747630  1.3862944  1.4586150  1.3297240  1.3787661  1.2208299  0.9820785 0.3506569 -2.4079456);
+    Print (lnC_he, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_he, 0.9820785  1.0473190  1.0543120  1.0043016  1.1755733  1.0331845  0.8796267 0.2623643 -2.2072749);
+    Print (lnC_sp, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_sp, 1.3787661  1.7245507  1.9183921  1.5368672  1.7281094  1.5216990  1.3001917 0.4382549 -2.5257286);
+    Print (lnC_li, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_li, 2.1114246  2.1065702  2.3115448  2.1849270  1.8421357  1.4724721  1.3837912 0.8754687 -1.8325815);
+    Print (lnC_gi, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_gi, 2.0906287  2.3174737  2.4782177  2.2894999  1.6863990  1.2208299  0.8628900 0.3001046 -3.2188758);
+    Print (lnC_ki, 1 2 4 7 24 48 72 168 672);
+    Data  (lnC_ki, 2.4773784  2.3551775  2.3711779  2.2300144  1.8855533  1.5432981  1.3137237 0.7275486 -2.0402208);
+    #Print (lnC_br, 1 2 4 7 24 48 72 168 672);
+    #Data  (lnC_br, );
+    #Print (lnC_ca, 1 2 4 7 24 48 72 168 672);
+    #Data  (lnC_ca, );
+    
+      }
+    } # end Zn(NO3)2
+    
+  } # end group
+} # end pop
+
+End.

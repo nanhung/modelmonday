@@ -1,0 +1,172 @@
+
+________________________________________
+
+MCSim v5.6.5
+
+Copyright (c) 1993-2015 Free Software Foundation, Inc.
+
+MCSim comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the GNU General Public License.
+
+* Using `APAP.model' model in file "model.c" created by mod v5.6.5
+
+New level - depth 1, instance 1
+New level - depth 2, instance 1
+New level - depth 3, instance 1
+Simulation 1 - depth 4, instance 1
+Simulation 2 - depth 4, instance 2
+Simulation 3 - depth 4, instance 3
+Simulation 4 - depth 4, instance 4
+Simulation 5 - depth 4, instance 5
+New level - depth 3, instance 2
+Simulation 6 - depth 4, instance 1
+Simulation 7 - depth 4, instance 2
+Simulation 8 - depth 4, instance 3
+Simulation 9 - depth 4, instance 4
+Simulation 10 - depth 4, instance 5
+
+Doing 100000 Metropolis within Gibbs simulations
+
+Wrote kernel SDs to "APAP_split_groups_24601.simdat.kernel"
+Wrote results to "APAP_split_groups_24601.simdat"
+
+________________________________________
+
+MCSim v5.6.5
+
+Copyright (c) 1993-2015 Free Software Foundation, Inc.
+
+MCSim comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the GNU General Public License.
+
+* Using `APAP.model' model in file "model.c" created by mod v5.6.5
+
+New level - depth 1, instance 1
+New level - depth 2, instance 1
+New level - depth 3, instance 1
+Simulation 1 - depth 4, instance 1
+Simulation 2 - depth 4, instance 2
+Simulation 3 - depth 4, instance 3
+Simulation 4 - depth 4, instance 4
+Simulation 5 - depth 4, instance 5
+New level - depth 3, instance 2
+Simulation 6 - depth 4, instance 1
+Simulation 7 - depth 4, instance 2
+Simulation 8 - depth 4, instance 3
+Simulation 9 - depth 4, instance 4
+Simulation 10 - depth 4, instance 5
+
+Doing 100000 Metropolis within Gibbs simulations
+
+Wrote kernel SDs to "APAP_split_groups_54321.simdat.kernel"
+Wrote results to "APAP_split_groups_54321.simdat"
+
+________________________________________
+
+MCSim v5.6.5
+
+Copyright (c) 1993-2015 Free Software Foundation, Inc.
+
+MCSim comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the GNU General Public License.
+
+* Using `APAP.model' model in file "model.c" created by mod v5.6.5
+
+New level - depth 1, instance 1
+New level - depth 2, instance 1
+New level - depth 3, instance 1
+Simulation 1 - depth 4, instance 1
+Simulation 2 - depth 4, instance 2
+Simulation 3 - depth 4, instance 3
+Simulation 4 - depth 4, instance 4
+Simulation 5 - depth 4, instance 5
+New level - depth 3, instance 2
+Simulation 6 - depth 4, instance 1
+Simulation 7 - depth 4, instance 2
+Simulation 8 - depth 4, instance 3
+Simulation 9 - depth 4, instance 4
+Simulation 10 - depth 4, instance 5
+
+Doing 100000 Metropolis within Gibbs simulations
+
+Wrote kernel SDs to "APAP_split_groups_12345.simdat.kernel"
+Wrote results to "APAP_split_groups_12345.simdat"
+
+________________________________________
+
+MCSim v5.6.5
+
+Copyright (c) 1993-2015 Free Software Foundation, Inc.
+
+MCSim comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the GNU General Public License.
+
+* Using `APAP.model' model in file "model.c" created by mod v5.6.5
+
+New level - depth 1, instance 1
+New level - depth 2, instance 1
+New level - depth 3, instance 1
+Simulation 1 - depth 4, instance 1
+Simulation 2 - depth 4, instance 2
+Simulation 3 - depth 4, instance 3
+Simulation 4 - depth 4, instance 4
+Simulation 5 - depth 4, instance 5
+New level - depth 3, instance 2
+Simulation 6 - depth 4, instance 1
+Simulation 7 - depth 4, instance 2
+Simulation 8 - depth 4, instance 3
+Simulation 9 - depth 4, instance 4
+Simulation 10 - depth 4, instance 5
+
+Doing 100000 Metropolis within Gibbs simulations
+
+Wrote kernel SDs to "APAP_split_groups_58745.simdat.kernel"
+Wrote results to "APAP_split_groups_58745.simdat"
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@nxt1620>
+Subject: Job 3969803: <mcsim_1> in cluster <Main_Compute> Done
+
+Job <mcsim_1> was submitted from host <login4> by user <nhsieh> in cluster <Main_Compute>.
+Job was executed on host(s) <4*nxt1620>, in queue <sn_long>, as user <nhsieh> in cluster <Main_Compute>.
+</home/nhsieh> was used as the home directory.
+</home/nhsieh/pbpk-mcsim> was used as the working directory.
+Started at Fri Feb 24 10:57:28 2017
+Results reported on Sat Feb 25 05:37:19 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#BSUB -J mcsim_1			## sets the job name
+#BSUB -L /bin/bash			## uses the bash login shell to initialize the job's execution environment.
+#BSUB -W 48:00				## sets to 48 hours the job's runtime wall-clock limit.
+#BSUB -n 4					## assigns 4 cores for execution.
+#BSUB -R "span[ptile=4]"     #Request 4 core per node.
+#BSUB -R "rusage[mem=500]"	## reserves 500MB per process/CPU for the job 
+#BSUB -M 500				## sets to 500MB as the per process enforceable memory limit.
+#BSUB -o stdout_1.%J		## directs the job's standard output (%J is jobid)
+
+./mcsim.APAP APAP_chain1.1.in & ./mcsim.APAP APAP_chain1.2.in & ./mcsim.APAP APAP_chain1.3.in & ./mcsim.APAP APAP_chain1.4.in
+wait
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   268194.66 sec.
+    Max Memory :                                 28 MB
+    Average Memory :                             25.93 MB
+    Total Requested Memory :                     2000.00 MB
+    Delta Memory :                               1972.00 MB
+    Max Processes :                              7
+    Max Threads :                                8
+
+The output (if any) is above this job summary.
+
