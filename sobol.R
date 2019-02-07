@@ -32,6 +32,12 @@ gen_samples_1 <- function(n, l, which = names(l), factor = c(0.01,100)) {
   return(list(x1 = as.data.frame(X), x2 = as.data.frame(Y)))
 }
 
+xx=4
+X <- sobol(100, dim = 5)
+plot(X[,1], X[,2])
+X[,1] <- 10^(X[,1] * xx) 
+plot(X[,1])
+
 gen_samples_2 <- function(n, l, which = names(l), factor = c(0.01,100)) {
   vars <- select_vars(names(l), !!(enquo(which)))
   l <- as.list(l)[vars]
@@ -39,7 +45,7 @@ gen_samples_2 <- function(n, l, which = names(l), factor = c(0.01,100)) {
   xx <- log(factor, 10)[2] - log(factor, 10)[1]
   len <- length(vars)
 
-  X <- sobol(n = length(l)*n*2, dim = 5, seed = 1234, scrambling = 3)
+  X <- sobol(n = length(l)*n*2, dim = 5)
   Y <- sobol(n = length(l)*n*2, dim = 5, seed = 2345, scrambling = 3)
   
   for(i in seq(len)){
@@ -63,14 +69,30 @@ batch_run <- function(x) {
   return(out$AUC)
 }
 
-samp1 <- gen_samples_1(4000, param(mod), TVCL:TVVP)
-samp2 <- gen_samples_2(4000, param(mod), TVCL:TVVP)
+samp1 <- gen_samples_1(1000, param(mod), TVCL:TVVP)
+samp2 <- gen_samples_2(1000, param(mod), TVCL:TVVP)
+head(samp1$x1)
+head(samp2$x1)
+
+i=2
+plot(density(samp1$x1[,i]))
+plot(density(samp1$x2[,i]))
+
+heatscatter(samp1$x1[,1], samp1$x1[,2], add.contour=T, nlevels=3)
+heatscatter(samp2$x1[,1], samp2$x1[,2], add.contour=T, nlevels=3)
+
+heatscatter(log(samp1$x1[,1]), log(samp1$x1[,2]), add.contour=T, nlevels=3)
+heatscatter(log(samp2$x1[,1]), log(samp2$x1[,2]), add.contour=T, nlevels=3)
 
 x1 <- sobol2007(batch_run, X1=samp1$x1, X2=samp1$x2, nboot=100)
 x2 <- sobol2007(batch_run, X1=samp2$x1, X2=samp2$x2, nboot=100)
 
 x1
 x2
+
+
+
+
 
 par(mfrow = c(2,1))
 plot(x1)
