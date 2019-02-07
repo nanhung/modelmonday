@@ -11,7 +11,7 @@ see(mod)
 
 sunev <- function(amt = 50,...) ev(amt = amt, ...)
 
-gen_samples <- function(n, l, which = names(l), factor = c(0.01,100)) {
+gen_samples_1 <- function(n, l, which = names(l), factor = c(0.01,100)) {
   vars <- select_vars(names(l), !!(enquo(which)))
   l <- as.list(l)[vars]
   l <- lapply(l, function(x) {
@@ -32,27 +32,20 @@ gen_samples <- function(n, l, which = names(l), factor = c(0.01,100)) {
   return(list(x1 = as.data.frame(X), x2 = as.data.frame(Y)))
 }
 
-gen_samples <- function(n, l, which = names(l), factor = c(0.01,100)) {
+gen_samples_2 <- function(n, l, which = names(l), factor = c(0.01,100)) {
   vars <- select_vars(names(l), !!(enquo(which)))
   l <- as.list(l)[vars]
-  l <- lapply(l, function(x) {
-    x*factor  
-  })
-  n <- length(l)*n*2
-  df <- as.data.frame(l)
-  len <- length(df)
-  #X <- matrix(ncol=len, nrow=n)
-  #colnames(X) <- names(df)
-  #Y <- X
-  
-  X <- sobol(n = 1000, dim = 5, seed = 1234, scrambling = 3)
-  Y <- sobol(n = 1000, dim = 5, seed = 2345, scrambling = 3)
+  l <- lapply(l, function(x) {x*factor})
+  xx <- log(factor, 10)[2] - log(factor, 10)[1]
+  len <- length(vars)
+
+  X <- sobol(n = length(l)*n*2, dim = 5, seed = 1234, scrambling = 3)
+  Y <- sobol(n = length(l)*n*2, dim = 5, seed = 2345, scrambling = 3)
   
   for(i in seq(len)){
-    r <- runif(n, df[1,i], df[2,i])
-    X[,i] <- r
-    r <- runif(n, df[1,i], df[2,i])
-    Y[,i] <- r
+    X[,i] <- l[[i]][[1]] * 10^(X[,i] * xx)
+    Y[,i] <- l[[i]][[1]] * 10^(Y[,i] * xx)
+    colnames(X) <- colnames(Y) <- vars 
   }
   return(list(x1 = as.data.frame(X), x2 = as.data.frame(Y)))
 }
@@ -70,13 +63,17 @@ batch_run <- function(x) {
   return(out$AUC)
 }
 
-samp <- gen_samples(1000, param(mod), TVCL:TVVP)
-head(samp$x1)
+samp1 <- gen_samples_1(4000, param(mod), TVCL:TVVP)
+samp2 <- gen_samples_2(4000, param(mod), TVCL:TVVP)
 
-x <- sobol2007(batch_run, X1=samp$x1, X2=samp$x2, nboot=100)
+x1 <- sobol2007(batch_run, X1=samp1$x1, X2=samp1$x2, nboot=100)
+x2 <- sobol2007(batch_run, X1=samp2$x1, X2=samp2$x2, nboot=100)
 
-x
+x1
+x2
 
-plot(x)
+par(mfrow = c(2,1))
+plot(x1)
+plot(x2)
 
 devtools::session_info()
