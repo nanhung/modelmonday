@@ -1,15 +1,17 @@
 # This nblog post is inspired by 
 # https://github.com/metrumresearchgroup/pbpk-qsp-mrgsolve/blob/master/docs/global_sensitivity_analysis.md
+# https://github.com/mrgsolve/gallery
 # I want to use some knowledge that I learn from 
 # https://ec.europa.eu/jrc/en/event/training-course/samo-2018
 # log scale; qusi Monte Carlo; Always plot the data 
 
+library(tidyverse) 
 library(mrgsolve) # mrgsim_ei
-library(tidyverse) # select_vars
 library(PKPDmisc) # auc_partial	
 library(sensitivity) # sobol2007
-library(randtoolbox)
-library(LSD)
+library(randtoolbox) # sobol
+library(reshape2) # melt
+library(LSD) # heatscatter
 
 mod <- mread("sunit", "models") %>% 
   update(end = 24, delta = 1) %>% zero_re
@@ -139,12 +141,60 @@ plot(x)
 plot(x1)
 plot(x2)
 
+par(mfrow = c(3,2), mar = c(2,2,3,1))
+for (i in 1:5){
+  heatscatter(log(x$X[,i]), log(x$y), xlab = "", ylab = "", main = names(x$X)[i])
+}
+
+par(mfrow = c(3,2), mar = c(2,2,3,1))
+for (i in 1:5){
+  heatscatter(log(x1$X[,i]), log(x1$y), xlab = "", ylab = "", main = names(x1$X)[i])
+}
+
 x$T[,"max. c.i."] - x$T[,"min. c.i."]
 x1$T[,"max. c.i."] - x1$T[,"min. c.i."]
 x2$T[,"max. c.i."] - x2$T[,"min. c.i."]
 
-# Convergence
+sample_converge <- function(n, l, which = names(l)){
+  vars <- select_vars(names(l), !!(enquo(which)))
+  m <- matrix(NA, length(n), length(vars))
+  colnames(m) <- vars
+  rownames(m) <- n
+  m2 <- m1 <- m
+  for (i in seq(length(n))){
+    samp <- gen_samples(n[i], l, names(vars))
+    samp1 <- gen_samples_1(n[i], l, names(vars))
+    samp2 <- gen_samples_2(n[i], l, names(vars))
+    x <- sobol2007(batch_run, X1=samp$x1, X2=samp$x2, nboot=100)
+    x1 <- sobol2007(batch_run, X1=samp1$x1, X2=samp1$x2, nboot=100)
+    x2 <- sobol2007(batch_run, X1=samp2$x1, X2=samp2$x2, nboot=100)
+    m[i,] <- x$T[,"max. c.i."] - x$T[,"min. c.i."]
+    m1[i,] <- x1$T[,"max. c.i."] - x1$T[,"min. c.i."]
+    m2[i,] <- x2$T[,"max. c.i."] - x2$T[,"min. c.i."]
+  } 
+  X <- list(MC = m, log_MC = m1, log_QMC = m2)
+  m %>% melt()
+  
+  return(X)
+}
+
+sample <- c(500, 1000, 2000, 4000, 8000)
+
+set.seed(88771)
+system.time(converge_list <- sample_converge(sample, param(mod), TVCL:TVVP))
 
 
+df <- do.call(rbind, list(converge_list[[1]] %>% melt() %>% cbind(type = "MC"),
+                          converge_list[[2]] %>% melt() %>% cbind(type = "log_MC"),
+                          converge_list[[3]] %>% melt() %>% cbind(type = "log_QMC")))
+
+theme_set(theme_light())
+
+
+df %>% `colnames<-`(c("sample.no", "parameter", "index", "type")) %>%
+  ggplot(aes(sample.no, index, group = parameter)) + geom_line(aes(color = parameter)) + 
+  facet_wrap(~type) + 
+  expand_limits(y= c(0, 0.5)) + geom_hline(yintercept = 0.05, linetype="dashed", size = 0.2) +
+  labs(y = "Convergence index", x = "Sample number")
 
 devtools::session_info()
