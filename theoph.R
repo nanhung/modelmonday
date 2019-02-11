@@ -1,4 +1,5 @@
 # http://wiekvoet.blogspot.com/2015/04/hierarchical-two-compartimental-pk-model.html
+# https://sepia.unil.ch/pharmacology/index.php?id=90
 rm(list=ls())
 
 Theoph.1 <- Theoph[ Theoph$Subject == 1, ]

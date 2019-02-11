@@ -11,19 +11,19 @@
 # - concentrations of substances in microM
 #
 # version 1 - Frederic Bois - Dec 2016
-# version 2 - Nan-Hung Hsieh - Feb 2018
+# version 2 - Nan-Hung Hsieh - Feb 2019
 # Updated:
-# - Add IV and delay oral doses
+# - Add delay oral doses
 # ==============================================================================
 
 States  = {Q_central,       # Quantity in central compartment (micromoles)
            Q_periph,        # ~           peripheral compartment
-           Q_to_release,       # ~        to release
-           Q_gi,          # ~        in stomach (micromoles)
+           Q_to_release,    # ~        to release
+           Q_gi,            # ~        in gi (micromoles)
            Q_elim};         # ~        eliminated
 
 Outputs = {C_central,       # Concentration in central compartment (microM)
-           Q_total,         # Total quantity for mass balance
+           Q_total,         # Total quantity (to test mass balance)
            lnQ_to_release,
            lnQ_gi,
            lnQ_periph,
@@ -31,8 +31,7 @@ Outputs = {C_central,       # Concentration in central compartment (microM)
            lnQ_total,
            lnC_central};        
 
-Inputs  = {PO_dose,  # immediate dose, in micromoles / h 
-           IV_dose_rate};
+Inputs  = {PO_dose,  # oral dose, in micromoles / h};
 
 # Default parameter values
 # ========================
@@ -43,7 +42,7 @@ G_immediate = 1; # immediate release (default)
 G_delayed = 0; 
 
 # Input setting
-Period = 12.0; # period of the exposure/no exposure cycle (h)
+Period = 24.0; # period of the exposure/no exposure cycle (h)
 TChng = 0.01; # infusion duration (h)
 PO_dose = PerDose(1, Period, 0, 0.01);
 
@@ -57,16 +56,15 @@ lnKa = log(1.0);
 lnKe = log(0.05);  
 
 # Volumes (L)
-# https://sepia.unil.ch/pharmacology/index.php?id=90
 V_central;
-lnV_central = log(0.3);
+lnV_central = log(0.1);
 
 # Transfer rate constants between compartments (1/h)
 Kc2p;
 Kp2c;
 
-lnKc2p = log(11);
-lnKp2c = log(5);
+lnKc2p = log(10);
+lnKp2c = log(0.1);
 
 # Statistical parameters
 # ========================
@@ -98,6 +96,7 @@ Va_lnKp2c;
 # ========================
 
 Ve_lnC_central;
+Ve_C_central;
 
 Initialize {
 Kr = exp(lnKr);
