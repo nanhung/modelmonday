@@ -116,7 +116,7 @@ Dynamics {
   dt (Q_gi) = (G_immediate > 0.5 ? PO_dose_rate : (G_delayed > 0.5 ? Kr * Q_to_release : 0.0)) - Ka * Q_gi;
   dt (Q_elim) = Ke * Q_central;
   dt (Q_periph)  = Kc2p * Q_central - Kp2c * Q_periph;
-  dt (Q_central) = IV_dose_rate +  Ka * Q_gi - dt(Q_elim) - dt(Q_periph);
+  dt (Q_central) = Ka * Q_gi - dt(Q_elim) - dt(Q_periph);
 }
 
 CalcOutputs {
