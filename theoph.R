@@ -1,5 +1,10 @@
 # http://wiekvoet.blogspot.com/2015/04/hierarchical-two-compartimental-pk-model.html
 # https://sepia.unil.ch/pharmacology/index.php?id=90
+
+library(lattice)
+library(latticeExtra)
+library(tidyverse)
+
 rm(list=ls())
 
 Theoph.1 <- Theoph[ Theoph$Subject == 1, ]
@@ -27,9 +32,16 @@ xvals <- seq(0, par("usr")[2], length.out = 55)
 lines(xvals, predict(fm1, newdata = list(Time = xvals)),
       col = 4)
 
-library(lattice)
-library(latticeExtra)
-library(tidyverse)
+
+d <- data.frame(v1=seq(0,9.9,0.1),
+                v2=rnorm(100),
+                v3=rnorm(100))
+d %>% mutate( ints = cut(v1, breaks= c(-Inf,0, 0.99, 1.99, 2.99, Inf)))
+Theoph
+
+
+
+
 
 
 ggplot(Theoph, aes(x=Time, y=conc, color=Subject)) + 
