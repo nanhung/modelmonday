@@ -1,3 +1,4 @@
+# https://statmodeling.stat.columbia.edu/2014/03/10/stan-model-pk-iv-oral-dosing/
 library(rstan)
 
 nIV <- 12
