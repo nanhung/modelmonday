@@ -7,7 +7,7 @@ library(rstan)
 library(bayesplot)
 
 modelName <- "twoCpt"
-data <- read_rdump(file.path(paste0(modelName,".data.R")))
+data <- read_rdump(file.path(paste0("data/", modelName,".data.R")))
 
 init <- function(){
   list(CL = exp(rnorm(1, log(10), 0.2)),
@@ -37,7 +37,7 @@ nThin <- 1
 nIter <- (nBurn + nPost) * nThin
 nBurnin <- nBurn * nThin
 
-fit <- stan(file = file.path(paste(modelName, ".stan", sep = "")),
+fit <- stan(file = file.path(paste("models/", modelName, ".stan", sep = "")),
             data = data,
             pars = parameters,
             iter = nIter,
@@ -48,7 +48,6 @@ fit <- stan(file = file.path(paste(modelName, ".stan", sep = "")),
             cores = min(nChains, parallel::detectCores()))
 
 #save(fit, file = file.path(modelDir, paste(modelName, "Fit.Rsave", sep = "")))
-
 #mcmcplots::mcmcDensity(fit, parametersToPlot, byChain = TRUE)
 
 xdata <- data.frame(data$cObs, data$time[data$evid != 1])

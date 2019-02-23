@@ -11,6 +11,7 @@ https://github.com/metrumresearchgroup/pbpk-qsp-mrgsolve/blob/master/docs/global
 # https://lib.dr.iastate.edu/cgi/viewcontent.cgi?article=2498&context=etd
 # https://2018.erum.io/slides/regular%20talks/Francois%20Mercier.pdf
 # https://www.gla.ac.uk/external/RSS/RSScomp/mikesmith.pdf
+# https://statmodeling.stat.columbia.edu/2014/03/10/stan-model-pk-iv-oral-dosing/
 
 # PKNCA
 https://cran.r-project.org/web/packages/PKNCA/vignettes/Superposition.html
