@@ -26,7 +26,10 @@ y <- deSolve::ode(initState, times, func = "derivs", parms = parms,
                   dllname = mName, initfunc = "initmod", nout = 1, outnames = Outputs)
 
 #
+par(mar = c(3,3,2,2))
+png(file="png/sim1.png",width=2400,height=1500,res=300)
 plot(y)
+dev.off()
 
 LL <- 0.5 
 UL <- 1.5
@@ -37,15 +40,31 @@ q.arg <- list(list(min = parms["vdist"] * LL, max = parms["vdist"] * UL),
               list(min = parms["kgutabs"] * LL, max = parms["kgutabs"] * UL)) 
 set.seed(1234)
 params <- c("vdist", "ke", "km", "kgutabs")
-x <- rfast99(params, n = 800, q = q, q.arg = q.arg, replicate = 20)
+x <- rfast99(params, n = 800, q = q, q.arg = q.arg, replicate = 10)
 
 #
-plot(x$a[,1,1], x$a[,1,2])
+par(mfrow = c(2,5), mar = c(0,3,2,2))
 
 
-Outputs <- c("Ccompartment", "Ametabolized")
+for(i in 1:10){
+  plot(x$a[,i,"kgutabs"], type = "b")
+}
+
+
+
+Outputs <- c("Ccompartment", "Agutlument", "Ametabolized", "Aelimination")
 y <- solve_fun(x, times, initState = initState, outnames = Outputs, dllname = mName)
 tell2(x,y)
+
+
+par(mfrow = c(2,2), mar = c(2,2,2,1), oma = c(2,2,0,0))
+pksim(y, vars = "Agutlument", main = "Agutlument")
+pksim(y, vars = "Aelimination", legend = F, main = "Aelimination")
+pksim(y, vars = "Ccompartment", legend = F, main = "Ccompartment")
+pksim(y, vars = "Ametabolized", legend = F, main = "Ametabolized")
+mtext("Time", SOUTH<-1, line=0.4, outer=TRUE)
+mtext("Quantity", WEST<-2, line=0.4, outer=TRUE)
+
 
 #
 plot(x, vars = "Ccompartment")
