@@ -1,36 +1,11 @@
-library(pksensi)
+if(!require(pksensi)) install.packages("pksensi"); library(pksensi)
 
-mName <- "pbtk1cpt"
-compile_model(mName, application = "R")
-#> * Created file 'pbtk1cpt.so'.
-source(paste0(mName, "_inits.R"))
-
-parms <- initParms()
-parms["vdist"] <- 0.5
-parms["ke"] <- 0.2
-parms["km"] <- 0.5
-parms["kgutabs"] <- 2.0
-initState <- initStates(parms=parms)
-initState["Agutlument"] <- 10
-
-parms
-
-initState
-
-Outputs
-
+mName <- "pbtk1cpt_v2"
+compile_model(mName, application = "mcsim",　version = "6.0.1")
+parms <- c(vdist = 0.5, ke = 0.2, km = 0.5, kgutabs = 2.0)
 times <- seq(from = 0.01, to = 24.01, by = 1)
 
-
-y <- deSolve::ode(initState, times, func = "derivs", parms = parms, 
-                  dllname = mName, initfunc = "initmod", nout = 1, outnames = Outputs)
-
 #
-par(mar = c(3,3,2,2))
-png(file="png/sim1.png",width=2400,height=1500,res=300)
-plot(y)
-dev.off()
-
 LL <- 0.5 
 UL <- 1.5
 q <- "qunif"
@@ -39,7 +14,7 @@ q.arg <- list(list(min = parms["vdist"] * LL, max = parms["vdist"] * UL),
               list(min = parms["km"] * LL, max = parms["km"] * UL),
               list(min = parms["kgutabs"] * LL, max = parms["kgutabs"] * UL)) 
 set.seed(1234)
-params <- c("vdist", "ke", "km", "kgutabs")
+params <- names(parms)
 x <- rfast99(params, n = 800, q = q, q.arg = q.arg, replicate = 20)
 cex <- 0.2
 
@@ -65,7 +40,6 @@ dev.off()
 
 #
 Outputs <- c("Agutlument", "Aelimination", "Acompartment", "Ccompartment", "AUC", "Ametabolized")
-#y <- solve_fun(x, times, initState = initState, outnames = Outputs, dllname = mName)
 conditions <- c("Agutlument = 10") # Set the initial state of Agutlument = 10 
 y<-solve_mcsim(x, mName = mName, 
                params = params,
@@ -105,13 +79,12 @@ heat_check(x, index = "CI")
 dev.off()
 
 
-check(x, SI.cutoff = 0.5, vars = "Ccompartment")
-check(x, SI.cutoff = 0.5, vars = "Ametabolized")
-
+check(x, SI.cutoff = 0.05, vars = "Ccompartment")
+check(x, SI.cutoff = 0.05, vars = "Ametabolized")
+check(x, SI.cutoff = 0.05)
 
 
 #
-
 png(file="png/sim8.png",width=3300,height=2100,res=300)
 par(mfrow=c(5,4),mar=c(0,0,0,0),oma=c(3,3,2,1));
 plot(x$a[,1,"vdist"], y[,1,"0.01","Ccompartment"], xaxt="n", ylab = "", cex = cex)
